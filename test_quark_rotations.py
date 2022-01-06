@@ -8,9 +8,9 @@ o = fvg.cubic.O()
 oh = fvg.cubic.Oh()
 
 id = np.identity(4)
-g2g3=np.matmul(gammas[2],gammas[3])
-g3g1=np.matmul(gammas[3],gammas[1])
-g1g2=np.matmul(gammas[1],gammas[2])
+g2g3 = np.matmul(gammas[2], gammas[3])
+g3g1 = np.matmul(gammas[3], gammas[1])
+g1g2 = np.matmul(gammas[1], gammas[2])
 
 GammaExpected = {
     "E": id,
@@ -66,18 +66,22 @@ GammaBarExpected = {
     "C2f": -(g3g1-g1g2)/math.sqrt(2)
 }
 
-for i,g in enumerate(o.elements):
-    if not np.allclose(Q.Gamma(g),GammaExpected[g.identifier["name"]]):
-        print("Constructing gamma for {} failed...".format(g.identifier['name']))
-    if not np.allclose(Q.Gamma(g,True),GammaBarExpected[g.identifier["name"]]):
-        print("Constructing gammaBar for {} failed...".format(g.identifier['name']))
+for i, g in enumerate(o.elements):
+    if not np.allclose(Q.Gamma(g), GammaExpected[g.identifier["name"]]):
+        print("Constructing gamma for {} failed...".format(
+            g.identifier['name']))
+    if not np.allclose(Q.Gamma(g, True), GammaBarExpected[g.identifier["name"]]):
+        print("Constructing gammaBar for {} failed...".format(
+            g.identifier['name']))
 
 #this is a trivial check
 inv = gammas[4]
 
-for i,g in enumerate(oh.elements):
-    if g.identifier["parity"]==-1:
-        if not np.allclose(Q.Gamma(g),np.matmul(inv,GammaExpected[g.identifier["name"]])):
-            print("Constructing gamma for {} failed...".format(g.identifier['name']))
-        if not np.allclose(Q.Gamma(g,True),np.matmul(inv,GammaBarExpected[g.identifier["name"]])):
-            print("Constructing gammaBar for {} failed...".format(g.identifier['name']))
+for i, g in enumerate(oh.elements):
+    if g.identifier["parity"] == -1:
+        if not np.allclose(Q.Gamma(g), np.matmul(inv, GammaExpected[g.identifier["name"]])):
+            print("Constructing gamma for {} failed...".format(
+                g.identifier['name']))
+        if not np.allclose(Q.Gamma(g, True), np.matmul(inv, GammaBarExpected[g.identifier["name"]])):
+            print("Constructing gammaBar for {} failed...".format(
+                g.identifier['name']))
