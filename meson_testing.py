@@ -139,7 +139,7 @@ def projectorMat(irrep, rep, gRep, group, row=0):
         #print(type(float(elem.irreps[irrep][row,row])))
         res += complex(elem.irreps[irrep][row, row])*np.transpose(rep[i])
         res += complex(elem.irreps[irrep][row, row])*np.transpose(gRep[i])
-    return res*len(irrep)/len(group.elements)
+    return (res*len(irrep)/len(group.elements)).round(8)
 
 
 tmp = projectorMat('A1g', mesonRep, gparityRep, oh)

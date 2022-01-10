@@ -19,13 +19,30 @@ quark = lambda spin : Q.Quark({
     'spin': spin,
 })
 
+# a basis with elements that are linearly dependent
+#basis = []
+#for s0 in range(0,NS):
+    #for s1 in range(0,NS):
+    #    for s2 in range(0,NS):
+    #        basis.append(Q.Elemental(1,[quark(s0),quark(s1),quark(s2)]))
+
+#len(basis)
+
+
 basis = []
-for s0 in range(0,NS):
-    for s1 in range(0,NS):
-        for s2 in range(0,NS):
-            basis.append(Q.Elemental(1,[quark(s0),quark(s1),quark(s2)]))
+for s0 in range(0, NS):
+  for s1 in range(0, NS):
+    for s2 in range(0, NS):
+      newOp = Q.Elemental(1, [quark(s0), quark(s1), quark(s2)])
+      foundRelated = False
+      for b in basis:
+        if newOp.quarks in utils.permutations(b.quarks):
+          foundRelated=True
+      if not foundRelated:
+        basis.append(newOp)
 
 len(basis)
+
 
 coefMat=[]
 for b in basis:

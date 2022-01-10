@@ -4,18 +4,6 @@ import numpy as np
 from constants import *
 
 
-class Expression():
-    def __init__(self, elementals):
-        self.elementals = elementals
-
-    def __str__(self):
-        s = ''
-        for e in self.elementals[:-1]:
-            s += '{}+'.format(e)
-        s += '{}'.format(self.elementals[-1])
-        return s
-
-
 class Elemental():
     def __init__(self, coef, quarks):
         self.coef = coef
@@ -55,6 +43,8 @@ class Elemental():
         return s
 
 
+
+
 class Quark():
     def __init__(self, p):
         if not isinstance(p, dict):
@@ -91,6 +81,9 @@ class Quark():
       vec = np.kron(vec, antiVec)
 
       return vec
+
+    def __eq__(self, other):
+      return self.barred==other.barred and self.flavor==other.flavor and self.color==other.color and self.spin==other.spin
 
     def __str__(self):
         s = ''
