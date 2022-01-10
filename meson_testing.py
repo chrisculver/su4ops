@@ -138,12 +138,14 @@ def projectorMat(irrep, rep, gRep, group, row=0):
     for i, elem in enumerate(group.elements):
         #print(type(float(elem.irreps[irrep][row,row])))
         res += complex(elem.irreps[irrep][row, row])*np.transpose(rep[i])
-        res += complex(elem.irreps[irrep][row, row])*np.transpose(gRep[i])
+        #res += complex(elem.irreps[irrep][row, row])*np.transpose(gRep[i])
     return (res*len(irrep)/len(group.elements)).round(8)
 
 
 tmp = projectorMat('A1g', mesonRep, gparityRep, oh)
 tmp = tmp.round(8)
+
+print(tmp)
 
 
 def get_vectors(proj, basis):
@@ -161,6 +163,13 @@ for v in vs:
   print(v)
 
 print("{}+{}+{}+{}".format(basis[0], basis[5], basis[10], basis[15]))
+print("{}+{}+{}+{}".format(basis[2], basis[7], basis[8], basis[13]))
+[[0, 0, 1, 0],
+ [0, 0, 0, 1],
+ [1, 0, 0, 0],
+ [0, 1, 0, 0]]
+
+gammas[4]
 
 
 tmp = projectorMat('T1g', mesonRep, gparityRep, oh)

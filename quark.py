@@ -1,7 +1,6 @@
-import scipy
 import math
 import numpy as np
-from constants import *
+from constants import NS, gammas, NF, flavorLabels, colorLabels
 
 
 class Elemental():
@@ -35,14 +34,29 @@ class Elemental():
 
       return res
 
+    def get_index(self):
+      idx = 0
+      for i in range(len(self.quarks)-1, -1, -1):
+        idx += (NS**i)*self.quarks[i].spin
+      return idx
+
+    def __hash__(self):
+      if len(self.quarks) == 3:
+        return hash((self.coef, self.quarks[0], self.quarks[1]))
+      if len(self.quarks) == 3:
+        return hash((self.coef, self.quarks[0], self.quarks[1], self.quarks[2]))
+      if len(self.quarks) == 4:
+        return hash((self.coef, self.quarks[0], self.quarks[1], self.quarks[2], self.quarks[3]))
+
+    def __eq__(self, other):
+      return self.coef == other.coef and self.quarks == other.quarks
+
     def __str__(self):
         s = '{}*'.format(self.coef)
         for q in self.quarks[:-1]:
             s += '{}*'.format(q)
         s += '{}'.format(self.quarks[-1])
         return s
-
-
 
 
 class Quark():
@@ -83,7 +97,10 @@ class Quark():
       return vec
 
     def __eq__(self, other):
-      return self.barred==other.barred and self.flavor==other.flavor and self.color==other.color and self.spin==other.spin
+      return self.barred == other.barred and self.flavor == other.flavor and self.color == other.color and self.spin == other.spin
+
+    def __hash__(self):
+      return hash((self.barred, self.flavor, self.color, self.spin))
 
     def __str__(self):
         s = ''

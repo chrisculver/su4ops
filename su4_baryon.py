@@ -1,21 +1,45 @@
-import math
 import utils
 import quark as Q
 import numpy as np
 import sympy as sp
 import FiniteVolumeGroups as fvg
-from constants import *
+from constants import NS
 
 
-def makeRepMat(basis, gElem):
-  coefMat = []
+def fullVec_to_reduced(vec, basis, extraBasis):
+
+  newVec = [0 for b in basis]
+  for i, val in enumerate(vec):
+    s0 = i % NS
+    tmp = i//NS
+    s1 = tmp % NS
+    tmp = tmp//NS
+    s2 = tmp % NS
+    tmp = tmp//NS
+    s3 = tmp
+    elemental = Q.Elemental(1, [quark(s0), quark(s1), quark(s2), quark(s3)])
+    newIdx = 0
+    if elemental in extraBasis:
+      newIdx = basis.index(extraBasis[elemental])
+    else:
+      newIdx = basis.index(elemental)
+
+    newVec[newIdx] += val
+  return np.array(newVec).round(8)
+
+
+def makeRepMat(basis, extraBasis, gElem, id):
+  rotMat = []
+  refMat = []
   for b in basis:
-    coefMat.append(b.spatial_rotate(gElem))
+    rotMat.append(fullVec_to_reduced(
+      b.spatial_rotate(gElem), basis, extraBasis))
+    refMat.append(fullVec_to_reduced(b.spatial_rotate(id), basis, extraBasis))
 
-  res = np.zeros((len(basis),len(basis)),dtype=complex)
+  res = np.zeros((len(basis), len(basis)), dtype=complex)
   for r in range(len(basis)):
     for c in range(len(basis)):
-      res[r,c] = np.dot(coefMat[r],coefMat[c])
+      res[r, c] = np.dot(rotMat[r], refMat[c])
 
   return np.transpose(res)
 
@@ -31,15 +55,8 @@ def quark(spin): return Q.Quark({
 })
 
 
-def quarkBar(spin): return Q.Quark({
-    'bar': True,
-    'flavor': 1,
-    'color': 0,
-    'spin': spin,
-})
-
-
 basis = []
+extraBasis = {}
 for s0 in range(0, NS):
   for s1 in range(0, NS):
     for s2 in range(0, NS):
@@ -48,19 +65,33 @@ for s0 in range(0, NS):
         foundRelated = False
         for b in basis:
           if newOp.quarks in utils.permutations(b.quarks):
-            foundRelated=True
+            foundRelated = True
+            extraBasis[newOp] = Q.Elemental(1, b.quarks)
         if not foundRelated:
           basis.append(newOp)
 
 len(basis)
-
+len(basis)+len(extraBasis)
 
 rep = []
 for g in oh.elements:
-  rep.append(makeRepMat(basis,g))
+  rep.append(makeRepMat(basis, extraBasis, g, oh.elements[0]))
 
-np.allclose(rep[0], np.eye(len(basis),len(basis)))
 
+np.allclose(rep[0], np.eye(len(basis), len(basis)))
+
+quark(0).spatial_rotate(oh.elements[1])
+print(basis[0])
+basis[0].spatial_rotate(oh.elements[1]).round(8)
+fullVec_to_reduced(basis[0].spatial_rotate(oh.elements[1]), basis, extraBasis)
+
+
+for r in range(len(basis)):
+  line = ""
+  for c in range(len(basis)):
+    line += "{} ".format(rep[1][r, c].round(4))
+  line += "\n"
+  print(line)
 
 
 def projectorMat(irrep, rep, group, row=0):
@@ -71,44 +102,33 @@ def projectorMat(irrep, rep, group, row=0):
         res += complex(elem.irreps[irrep][row, row])*np.transpose(rep[i])
     return (res*len(irrep)/len(group.elements)).round(8)
 
+
 def operators(irrep, rep, group, row=0):
   proj = projectorMat(irrep, rep, group, row)
   rrefMat = sp.Matrix(proj).rref()[0].tolist()
   for row in rrefMat[:]:
     if (row == [0 for i in range(len(row))]):
       rrefMat.remove(row)
-  rrefMat = np.array(rrefMat).astype(float)
+  rrefMat = np.array(rrefMat).astype(complex)
   return rrefMat
 
+
 def op_basis_map(op):
-  basis_map={}
-  for i,val in enumerate(op):
-    if not np.isclose(val,0):
-      basis_map[i]=val
+  basis_map = {}
+  for i, val in enumerate(op):
+    if not np.isclose(val, 0):
+      basis_map[i] = val
   return basis_map
 
-tot=0
+
+tot = 0
 for irrep in oh.elements[0].irreps:
-  ops=operators(irrep, rep, oh)
-  tot+=len(ops)*len(oh.elements[0].irreps[irrep])
-  print("{} ops in {}".format(len(ops),irrep))
+  ops = operators(irrep, rep, oh)
+  tot += len(ops)*len(oh.elements[0].irreps[irrep])
+  print("{} ops in {}".format(len(ops), irrep))
 print("{} ops across all irreps".format(tot))
 
-op_basis_map(operators('A1g',rep,oh)[0])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+op_basis_map(operators('A1g', rep, oh)[0])
 
 
 ### OLD STUFF FOR FULL 256 BASIS
@@ -124,7 +144,7 @@ for irrep in ['Eg', 'Eu', 'T2g', 'T2u']:
     print("  {}".format(op_basis_map(op)))
   print("")
 
-for i in [0,10,34,40,85,95,119,125,130,136,160,170,215,221,245,255]:
+for i in [0, 10, 34, 40, 85, 95, 119, 125, 130, 136, 160, 170, 215, 221, 245, 255]:
   print(basis[i])
 op_map = op_basis_map(operators('T2g', rep, oh, row=0)[0])
 
@@ -136,8 +156,8 @@ for s0 in range(NS):
       for s3 in range(NS):
         idx = s0*NS*NS*NS + s1*NS*NS + s2*NS + s3
         if idx in op_map.keys():
-          file.write("{} {} {} {} {}\n".format(s0,s1,s2,s3,op_map[idx]))
+          file.write("{} {} {} {} {}\n".format(s0, s1, s2, s3, op_map[idx]))
         else:
-          file.write("{} {} {} {} {}\n".format(s0,s1,s2,s3,0))
+          file.write("{} {} {} {} {}\n".format(s0, s1, s2, s3, 0))
 
 file.close()
