@@ -127,6 +127,11 @@ wG = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       ]
 
+print(len(basis[0].g_parity_rotate()))
+for i, elem in enumerate(basis[0].g_parity_rotate()):
+  if not np.isclose(elem, 0):
+    print(i)
+
 gparityRep = []
 for rep in mesonRep:
   gparityRep.append(np.matmul(rep, wG))

@@ -41,7 +41,7 @@ class Elemental():
       return idx
 
     def __hash__(self):
-      if len(self.quarks) == 3:
+      if len(self.quarks) == 2:
         return hash((self.coef, self.quarks[0], self.quarks[1]))
       if len(self.quarks) == 3:
         return hash((self.coef, self.quarks[0], self.quarks[1], self.quarks[2]))
