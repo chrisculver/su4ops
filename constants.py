@@ -1,6 +1,6 @@
 import gammas as G
 
-NC = 4
+NC = 2
 NS = G.NS
 gamma_basis = 'degrand-rossi'  # 'dirac-pauli' #weyl-chiral #degrand-rossi
 

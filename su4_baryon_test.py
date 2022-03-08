@@ -42,6 +42,10 @@ utils.operators('A1g', rep, oh)
 
 print("{}-2*{}+{}".format(basis[9], basis[14], basis[23]))
 
+#TODO: is the full Gamma_{abcd} symmetric or anti-symmetric.
+
+
+
 utils.operators('Eg', rep, oh)
 
 utils.operators('T2g', rep, oh)
