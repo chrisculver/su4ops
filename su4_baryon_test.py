@@ -1,3 +1,5 @@
+
+
 import utils
 import quark as Q
 import numpy as np
@@ -45,7 +47,8 @@ print("{}-2*{}+{}".format(basis[9], basis[14], basis[23]))
 #TODO: is the full Gamma_{abcd} symmetric or anti-symmetric.
 
 
-
 utils.operators('Eg', rep, oh)
+print("{}+{}+{}+{}".format(basis[0], basis[20], basis[30], basis[34]))
+
 
 utils.operators('T2g', rep, oh)

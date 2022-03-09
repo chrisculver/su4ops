@@ -30,15 +30,16 @@ len(basis)+len(extraBasis)
 
 rep = []
 for g in oh.elements:
-  rep.append(makeRepMat(basis, extraBasis, g, oh.elements[0]))
+  rep.append(utils.makeRepMat(basis, extraBasis, g, oh.elements[0]))
 
 
 np.allclose(rep[0], np.eye(len(basis), len(basis)))
 
-quark(0).spatial_rotate(oh.elements[1])
+utils.quark(0).spatial_rotate(oh.elements[1])
 print(basis[0])
 basis[0].spatial_rotate(oh.elements[1]).round(8)
-fullVec_to_reduced(basis[0].spatial_rotate(oh.elements[1]), basis, extraBasis)
+utils.fullVec_to_reduced(basis[0].spatial_rotate(
+  oh.elements[1]), basis, extraBasis)
 
 
 for r in range(len(basis)):
