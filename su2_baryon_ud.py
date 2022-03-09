@@ -125,3 +125,5 @@ print("{}-{}+{}-{}".format(basis[3], basis[6], basis[9], basis[12]))
 
 # su(2) operator construction Randy Lewis - dark matter
 # baryon + pion(?) are part of triplet
+gammas[5]
+np.matmul( np.matmul(gammas[1],gammas[2]), np.matmul(gammas[3], gammas[4]) )
