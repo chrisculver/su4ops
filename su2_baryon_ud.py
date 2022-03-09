@@ -2,7 +2,7 @@ import utils
 import quark as Q
 import numpy as np
 import FiniteVolumeGroups as fvg
-from constants import NS
+from constants import NS, gammas
 
 oh = fvg.cubic.Oh()
 
@@ -120,3 +120,9 @@ print("{}-{}+{}-{}".format(basis[3],basis[6],basis[9],basis[12]))
 #[0,0,-1,0]
 #[0,1,0,0]
 #[-1,0,0,0]
+
+
+
+
+gammas[5]
+np.matmul( np.matmul(gammas[1],gammas[2]), np.matmul(gammas[3], gammas[4]) )
