@@ -51,12 +51,35 @@ def su2_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0):
     s1 = tmp % NS
     elemental = Q.Elemental(1, [quark(s0,f1), quark(s1,f2)])
     newIdx = 0
+    sign = 1
     if elemental in extraBasis:
-      newIdx = basis.index(extraBasis[elemental])
+      newIdx = basis.index(extraBasis[elemental]['elemental'])
+      sign = extraBasis[elemental]['sign']
     else:
       newIdx = basis.index(elemental)
 
-    newVec[newIdx] += val
+    newVec[newIdx] += sign*val
+  return np.array(newVec).round(8)
+
+def su3_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0, f3=0):
+  newVec = [0 for b in basis]
+  for i, val in enumerate(vec):
+    s0 = i % NS
+    tmp = i//NS
+    s1 = tmp % NS
+    tmp = tmp//NS
+    s2 = tmp % NS
+
+    elemental = Q.Elemental(1, [quark(s0,f1), quark(s1,f2), quark(s2,f3)])
+    newIdx = 0
+    sign = 1
+    if elemental in extraBasis:
+      newIdx = basis.index(extraBasis[elemental]['elemental'])
+      sign = extraBasis[elemental]['sign']
+    else:
+      newIdx = basis.index(elemental)
+
+    newVec[newIdx] += sign*val
   return np.array(newVec).round(8)
 
 
@@ -82,9 +105,11 @@ def su4_fullVec_to_reduced(vec, basis, extraBasis):
   return np.array(newVec).round(8)
 
 
-def fullVec_to_reduced(vec, basis, extraBasis,f1=0,f2=0):
+def fullVec_to_reduced(vec, basis, extraBasis,f1=0,f2=0,f3=0):
   if NC == 2:
     return su2_fullVec_to_reduced(vec, basis, extraBasis,f1,f2)
+  elif NC == 3:
+    return su3_fullVec_to_reduced(vec, basis, extraBasis,f1,f2,f3)
   elif NC == 4:
     return su4_fullVec_to_reduced(vec, basis, extraBasis)
   else:
@@ -132,3 +157,44 @@ def op_basis_map(op):
     if not np.isclose(val, 0):
       basis_map[i] = val
   return basis_map
+
+
+
+
+# from https://stackoverflow.com/questions/1503072/how-to-check-if-permutations-have-equal-parity #you'll never guess what my google search was to find this.
+def arePermsEqualParity(perm0, perm1):
+    """Check if 2 permutations are of equal parity.
+
+    Assume that both permutation lists are of equal length
+    and have the same elements. No need to check for these
+    conditions.
+
+    :param perm0: A list.
+    :param perm1: Another list with same elements.
+
+    :return: True if even parity, False if odd parity.
+    """
+    perm1 = perm1[:] ## copy this list so we don't mutate the original
+
+    transCount = 0
+    for loc in range(len(perm0) - 1):                         # Do (len - 1) transpositions
+        p0 = perm0[loc]
+        p1 = perm1[loc]
+        if p0 != p1:
+            sloc = perm1[loc:].index(p0)+loc          # Find position in perm1
+            perm1[loc], perm1[sloc] = p0, p1          # Swap in perm1
+            transCount += 1
+
+    # Even number of transpositions means equal parity
+    if (transCount % 2) == 0:
+        return True
+    else:
+        return False
+
+def print_vec(vec, basis):
+  s=""
+  for i in range(len(vec)-1):
+    if not np.isclose(vec[i],0):
+      s+="{}*{}".format(vec[i],basis[i])+"+"
+  s+="{}*{}".format(vec[i],basis[i])
+  print(s)

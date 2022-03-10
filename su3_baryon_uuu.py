@@ -4,15 +4,14 @@ import numpy as np
 import FiniteVolumeGroups as fvg
 from constants import NS
 
-oh = fvg.cubic.Oh()
+o2h = fvg.cubic.O2h()
 
 basis = []
-fullbasis=[]
 extraBasis = {}
 for s0 in range(0, NS):
   for s1 in range(0, NS):
-      newOp = Q.Elemental(1, [utils.quark(s0), utils.quark(s1)])
-      fullbasis.append(newOp)
+    for s2 in range(0, NS):
+      newOp = Q.Elemental(1, [utils.quark(s0), utils.quark(s1), utils.quark(s2)])
       foundRelated = False
       for b in basis:
         if newOp.quarks in utils.permutations(b.quarks):
@@ -25,43 +24,28 @@ for s0 in range(0, NS):
         basis.append(newOp)
 
 len(basis)
-
+len(extraBasis)
+type(extraBasis)
 for b in basis:
   print(b)
 for e,val in extraBasis.items():
   print("{} = {} * {}".format(e,val['sign'],val['elemental']))
 
-
-print(basis[1])
-tst=Q.Elemental(1, [utils.quark(1),utils.quark(0)])
-
-
-rot01 = basis[1].spatial_rotate(oh.elements[1])
-rot10 = tst.spatial_rotate(oh.elements[1])
-
-
-utils.print_vec(rot01.round(4), fullbasis)
-utils.print_vec(rot10.round(4), fullbasis)
-
-
-
-
-
-
-
-
-
 rep = []
-for g in oh.elements:
-  rep.append(utils.makeRepMat(basis, extraBasis, g, oh.elements[0]))
+for g in o2h.elements:
+  rep.append(utils.makeRepMat(basis, extraBasis, g, o2h.elements[0]))
+
+
+rep[1]
 
 
 #check that the rep is closed
-for g1 in rep:
-    for g2 in rep:
+for i,g1 in enumerate(rep):
+    for j,g2 in enumerate(rep):
         prod = np.matmul(g1,g2)
         if not any(np.allclose(prod, g) for g in rep):
-            print("not closed")
+            print("not closed for {}, {}".format(i,j))
+            break
 
 # check associativity
 for a in rep:
@@ -71,6 +55,7 @@ for a in rep:
             rhs = np.matmul(a,np.matmul(b,c))
             if not np.allclose(lhs,rhs):
                 print("associativity fails")
+                break
 
 # identity
 len(rep[0])
@@ -86,17 +71,18 @@ for g1 in rep:
         print("g1 doesn't have an inverse")
 
 tot = 0
-for irrep in oh.elements[0].irreps:
-  ops = utils.operators(irrep, rep, oh)
-  tot += len(ops)*len(oh.elements[0].irreps[irrep])
+for irrep in o2h.elements[0].irreps:
+  ops = utils.operators(irrep, rep, o2h)
+  tot += len(ops)*len(o2h.elements[0].irreps[irrep])
   print("{} ops in {}".format(len(ops), irrep))
 
 print("{} operators across all irreps".format(tot))
 
-utils.operators('A1u', rep, oh)
-print("{}-{}".format(basis[3], basis[5]))
+for op in utils.operators('G1g', rep, o2h):
+  utils.print_vec(op,basis)
 
-#[[0,0,0,1],
-#[0,0,-1,0],
-#[0,1,0,0],
-#[-1,0,0,0]]
+
+
+utils.operators('Hg', rep, o2h)
+
+utils.operators('Hu', rep, o2h)
