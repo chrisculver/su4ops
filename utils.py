@@ -36,12 +36,13 @@ def permutations(elems):
     return _generate_permutations(elements, len(elements))
 
 
-def quark(spin,flavor=0): return Q.Quark({
+def quark(spin, flavor=0): return Q.Quark({
     'bar': False,
     'flavor': flavor,
     'color': 0,
     'spin': spin,
 })
+
 
 def su2_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0):
   newVec = [0 for b in basis]
@@ -49,7 +50,7 @@ def su2_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0):
     s0 = i % NS
     tmp = i//NS
     s1 = tmp % NS
-    elemental = Q.Elemental(1, [quark(s0,f1), quark(s1,f2)])
+    elemental = Q.Elemental(1, [quark(s0, f1), quark(s1, f2)])
     newIdx = 0
     sign = 1
     if elemental in extraBasis:
@@ -101,28 +102,40 @@ def su4_fullVec_to_reduced(vec, basis, extraBasis):
     else:
       newIdx = basis.index(elemental)
 
+    #TODO: I think this needs to be multiplied by +/- 1 depending on Grassman?
     newVec[newIdx] += val
   return np.array(newVec).round(8)
 
 
+<<<<<<< HEAD
 def fullVec_to_reduced(vec, basis, extraBasis,f1=0,f2=0,f3=0):
   if NC == 2:
     return su2_fullVec_to_reduced(vec, basis, extraBasis,f1,f2)
   elif NC == 3:
     return su3_fullVec_to_reduced(vec, basis, extraBasis,f1,f2,f3)
+=======
+def fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0):
+  if NC == 2:
+    return su2_fullVec_to_reduced(vec, basis, extraBasis, f1, f2)
+>>>>>>> c054202b26b4147517d88905e2d4865e2d0186f6
   elif NC == 4:
     return su4_fullVec_to_reduced(vec, basis, extraBasis)
   else:
     raise ValueError("Reducing NC={} vector not implemented".format(NC))
+# [A,B],
+# A -> A + B - C,  [1,1,-1]
+# C === B
+# [1,0]
 
 
-def makeRepMat(basis, extraBasis, gElem, id,f1=0,f2=0):
+def makeRepMat(basis, extraBasis, gElem, id, f1=0, f2=0):
   rotMat = []
   refMat = []
   for b in basis:
     rotMat.append(fullVec_to_reduced(
-      b.spatial_rotate(gElem), basis, extraBasis,f1,f2))
-    refMat.append(fullVec_to_reduced(b.spatial_rotate(id), basis, extraBasis,f1,f2))
+      b.spatial_rotate(gElem), basis, extraBasis, f1, f2))
+    refMat.append(fullVec_to_reduced(
+        b.spatial_rotate(id), basis, extraBasis, f1, f2))
 
   res = np.zeros((len(basis), len(basis)), dtype=complex)
   for r in range(len(basis)):

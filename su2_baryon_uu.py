@@ -59,7 +59,7 @@ for g in oh.elements:
 #check that the rep is closed
 for g1 in rep:
     for g2 in rep:
-        prod = np.matmul(g1,g2)
+        prod = np.matmul(g1, g2)
         if not any(np.allclose(prod, g) for g in rep):
             print("not closed")
 
@@ -67,9 +67,9 @@ for g1 in rep:
 for a in rep:
     for b in rep:
         for c in rep:
-            lhs = np.matmul(np.matmul(a,b),c)
-            rhs = np.matmul(a,np.matmul(b,c))
-            if not np.allclose(lhs,rhs):
+            lhs = np.matmul(np.matmul(a, b), c)
+            rhs = np.matmul(a, np.matmul(b, c))
+            if not np.allclose(lhs, rhs):
                 print("associativity fails")
 
 # identity
@@ -80,7 +80,7 @@ np.allclose(rep[0], np.identity(len(rep[0])))
 for g1 in rep:
     has_inverse = False
     for g2 in rep:
-        if np.allclose(np.matmul(g1,g2),np.identity(len(rep[0]))):
+        if np.allclose(np.matmul(g1, g2), np.identity(len(rep[0]))):
             has_inverse = True
     if not has_inverse:
         print("g1 doesn't have an inverse")
@@ -95,6 +95,12 @@ print("{} operators across all irreps".format(tot))
 
 utils.operators('A1u', rep, oh)
 print("{}-{}".format(basis[3], basis[5]))
+
+#[[0,0,0,1]]
+#[0,0,-1,0]
+#[0,0,0,0]
+#[0,0,0,0]
+
 
 #[[0,0,0,1],
 #[0,0,-1,0],

@@ -10,7 +10,7 @@ basis = []
 extraBasis = {}
 for s0 in range(0, NS):
     for s1 in range(0, NS):
-        newOp = Q.Elemental(1, [utils.quark(s0,0), utils.quark(s1,1)])
+        newOp = Q.Elemental(1, [utils.quark(s0, 0), utils.quark(s1, 1)])
         foundRelated = False
         for b in basis:
             if newOp.quarks in utils.permutations(b.quarks):
@@ -18,7 +18,7 @@ for s0 in range(0, NS):
                 extraBasis[newOp] = Q.Elemental(1, b.quarks)
         if not foundRelated:
             basis.append(newOp)
-        newOp = Q.Elemental(1, [utils.quark(s1,1), utils.quark(s0,0)])
+        newOp = Q.Elemental(1, [utils.quark(s1, 1), utils.quark(s0, 0)])
         foundRelated = False
         for b in basis:
             if newOp.quarks in utils.permutations(b.quarks):
@@ -41,18 +41,18 @@ tVec
 print(basis[1])
 print(basis[4])
 
-utils.fullVec_to_reduced(tVec, basis, extraBasis,0,1)
+utils.fullVec_to_reduced(tVec, basis, extraBasis, 0, 1)
 
 
 rep = []
 for g in oh.elements:
-  rep.append(utils.makeRepMat(basis, extraBasis, g, oh.elements[0],0,1))
+  rep.append(utils.makeRepMat(basis, extraBasis, g, oh.elements[0], 0, 1))
 
 
 #check that the rep is closed
 for g1 in rep:
     for g2 in rep:
-        prod = np.matmul(g1,g2)
+        prod = np.matmul(g1, g2)
         if not any(np.allclose(prod, g) for g in rep):
             print("not closed")
 
@@ -60,9 +60,9 @@ for g1 in rep:
 for a in rep:
     for b in rep:
         for c in rep:
-            lhs = np.matmul(np.matmul(a,b),c)
-            rhs = np.matmul(a,np.matmul(b,c))
-            if not np.allclose(lhs,rhs):
+            lhs = np.matmul(np.matmul(a, b), c)
+            rhs = np.matmul(a, np.matmul(b, c))
+            if not np.allclose(lhs, rhs):
                 print("associativity fails")
 
 # identity
@@ -73,7 +73,7 @@ np.allclose(rep[0], np.identity(len(rep[0])))
 for g1 in rep:
     has_inverse = False
     for g2 in rep:
-        if np.allclose(np.matmul(g1,g2),np.identity(len(rep[0]))):
+        if np.allclose(np.matmul(g1, g2), np.identity(len(rep[0]))):
             has_inverse = True
     if not has_inverse:
         print("g1 doesn't have an inverse")
@@ -90,16 +90,16 @@ print("{} operators across all irreps".format(tot))
 
 utils.operators('A1u', rep, oh)
 
-print("{}-{}-{}+{}".format(basis[1],basis[4],basis[11],basis[14]))
+print("{}-{}-{}+{}".format(basis[1], basis[4], basis[11], basis[14]))
 #[[0,1,0,0]
 #[-1,0,0,0]
 #[0,0,0,-1]
 #[0,0,1,0]]
-
+np.matmul(gammas[4], gammas[2])
 # this is gamma4.gamma2, which is C according to 3.139 of Colin's notes
 # C is exactly what 0912.0691 use for pseudo-scalar
 
-print("{}-{}-{}+{}".format(basis[3],basis[6],basis[9],basis[12]))
+print("{}-{}-{}+{}".format(basis[3], basis[6], basis[9], basis[12]))
 #[0,0,0,1]
 #[0,0,-1,0]
 #[0,-1,0,0]
@@ -107,7 +107,7 @@ print("{}-{}-{}+{}".format(basis[3],basis[6],basis[9],basis[12]))
 
 utils.operators('A1g', rep, oh)
 
-print("{}-{}+{}-{}".format(basis[1],basis[4],basis[11],basis[14]))
+print("{}-{}+{}-{}".format(basis[1], basis[4], basis[11], basis[14]))
 #[0,1,0,0]
 #[-1,0,0,0]
 #[0,0,0,1]
@@ -115,14 +115,15 @@ print("{}-{}+{}-{}".format(basis[1],basis[4],basis[11],basis[14]))
 
 # this is C.g5, which is what 0912.0691 use for the scalarss
 
-print("{}-{}+{}-{}".format(basis[3],basis[6],basis[9],basis[12]))
+
+print("{}-{}+{}-{}".format(basis[3], basis[6], basis[9], basis[12]))
 #[0,0,0,1]
 #[0,0,-1,0]
 #[0,1,0,0]
 #[-1,0,0,0]
 
 
-
-
+# su(2) operator construction Randy Lewis - dark matter
+# baryon + pion(?) are part of triplet
 gammas[5]
 np.matmul( np.matmul(gammas[1],gammas[2]), np.matmul(gammas[3], gammas[4]) )
