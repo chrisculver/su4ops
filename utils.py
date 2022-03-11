@@ -52,15 +52,16 @@ def su2_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0):
     s1 = tmp % NS
     elemental = Q.Elemental(1, [quark(s0, f1), quark(s1, f2)])
     newIdx = 0
-    sign = 1
+    sign = 1.
     if elemental in extraBasis:
       newIdx = basis.index(extraBasis[elemental]['elemental'])
-      sign = extraBasis[elemental]['sign']
+      #sign = extraBasis[elemental]['sign']
     else:
       newIdx = basis.index(elemental)
 
     newVec[newIdx] += sign*val
   return np.array(newVec).round(8)
+
 
 def su3_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0, f3=0):
   newVec = [0 for b in basis]
@@ -71,12 +72,12 @@ def su3_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0, f3=0):
     tmp = tmp//NS
     s2 = tmp % NS
 
-    elemental = Q.Elemental(1, [quark(s0,f1), quark(s1,f2), quark(s2,f3)])
+    elemental = Q.Elemental(1, [quark(s0, f1), quark(s1, f2), quark(s2, f3)])
     newIdx = 0
-    sign = 1
+    sign = 1.
     if elemental in extraBasis:
       newIdx = basis.index(extraBasis[elemental]['elemental'])
-      sign = extraBasis[elemental]['sign']
+      #sign = extraBasis[elemental]['sign']
     else:
       newIdx = basis.index(elemental)
 
@@ -107,17 +108,11 @@ def su4_fullVec_to_reduced(vec, basis, extraBasis):
   return np.array(newVec).round(8)
 
 
-<<<<<<< HEAD
-def fullVec_to_reduced(vec, basis, extraBasis,f1=0,f2=0,f3=0):
-  if NC == 2:
-    return su2_fullVec_to_reduced(vec, basis, extraBasis,f1,f2)
-  elif NC == 3:
-    return su3_fullVec_to_reduced(vec, basis, extraBasis,f1,f2,f3)
-=======
-def fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0):
+def fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0, f3=0):
   if NC == 2:
     return su2_fullVec_to_reduced(vec, basis, extraBasis, f1, f2)
->>>>>>> c054202b26b4147517d88905e2d4865e2d0186f6
+  elif NC == 3:
+    return su3_fullVec_to_reduced(vec, basis, extraBasis, f1, f2, f3)
   elif NC == 4:
     return su4_fullVec_to_reduced(vec, basis, extraBasis)
   else:
@@ -172,8 +167,6 @@ def op_basis_map(op):
   return basis_map
 
 
-
-
 # from https://stackoverflow.com/questions/1503072/how-to-check-if-permutations-have-equal-parity #you'll never guess what my google search was to find this.
 def arePermsEqualParity(perm0, perm1):
     """Check if 2 permutations are of equal parity.
@@ -187,10 +180,11 @@ def arePermsEqualParity(perm0, perm1):
 
     :return: True if even parity, False if odd parity.
     """
-    perm1 = perm1[:] ## copy this list so we don't mutate the original
+    perm1 = perm1[:]  # copy this list so we don't mutate the original
 
     transCount = 0
-    for loc in range(len(perm0) - 1):                         # Do (len - 1) transpositions
+    # Do (len - 1) transpositions
+    for loc in range(len(perm0) - 1):
         p0 = perm0[loc]
         p1 = perm1[loc]
         if p0 != p1:
@@ -204,10 +198,11 @@ def arePermsEqualParity(perm0, perm1):
     else:
         return False
 
+
 def print_vec(vec, basis):
-  s=""
+  s = ""
   for i in range(len(vec)-1):
-    if not np.isclose(vec[i],0):
-      s+="{}*{}".format(vec[i],basis[i])+"+"
-  s+="{}*{}".format(vec[i],basis[i])
+    if not np.isclose(vec[i], 0):
+      s += "{}*{}".format(vec[i], basis[i])+"+"
+  s += "{}*{}".format(vec[i], basis[i])
   print(s)

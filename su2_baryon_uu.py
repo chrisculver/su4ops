@@ -7,7 +7,7 @@ from constants import NS
 oh = fvg.cubic.Oh()
 
 basis = []
-fullbasis=[]
+fullbasis = []
 extraBasis = {}
 for s0 in range(0, NS):
   for s1 in range(0, NS):
@@ -20,20 +20,25 @@ for s0 in range(0, NS):
           sign = 1
           if not utils.arePermsEqualParity(newOp.quarks, b.quarks):
             sign = -1
-          extraBasis[newOp] = {'elemental': Q.Elemental(1, b.quarks), 'sign': sign}
+          extraBasis[newOp] = {
+            'elemental': Q.Elemental(1, b.quarks), 'sign': sign}
       if not foundRelated:
         basis.append(newOp)
 
 len(basis)
 
+for b in fullbasis:
+  print(b)
+
+
 for b in basis:
   print(b)
-for e,val in extraBasis.items():
-  print("{} = {} * {}".format(e,val['sign'],val['elemental']))
+for e, val in extraBasis.items():
+  print("{} = {} * {}".format(e, val['sign'], val['elemental']))
 
 
 print(basis[1])
-tst=Q.Elemental(1, [utils.quark(1),utils.quark(0)])
+tst = Q.Elemental(1, [utils.quark(1), utils.quark(0)])
 
 
 rot01 = basis[1].spatial_rotate(oh.elements[1])
@@ -42,13 +47,6 @@ rot10 = tst.spatial_rotate(oh.elements[1])
 
 utils.print_vec(rot01.round(4), fullbasis)
 utils.print_vec(rot10.round(4), fullbasis)
-
-
-
-
-
-
-
 
 
 rep = []
