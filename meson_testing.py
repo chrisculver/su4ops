@@ -2,11 +2,12 @@
 # so we don't have G-parity...
 
 import math
-import quark as Q
+import su4ops.quark as Q
+import su4ops.elemental as E
 import numpy as np
 import sympy as sp
 import FiniteVolumeGroups as fvg
-from constants import *
+from su4ops.constants import NS, gammas
 
 
 def makeRepMat(basis, gElem):
@@ -43,7 +44,7 @@ print(quark(0))
 basis = []
 for s0 in range(0, NS):
     for s1 in range(0, NS):
-        basis.append(Q.Elemental(1, [quarkBar(s1), quark(s0)]))
+        basis.append(E.Elemental(1, [quarkBar(s1), quark(s0)]))
 
 print(len(basis))
 for b in basis:
@@ -99,6 +100,7 @@ for b in basis:
 isRepMat = []
 for b in basis:
   isRepMat.append(b.spatial_rotate(oh.elements[24]))
+
 
 np.allclose(c4zRepMat, expectedC4z)
 np.allclose(c4yRepMat, expectedC4y)
