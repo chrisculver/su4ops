@@ -1,6 +1,7 @@
 import copy
-from constants import NS, NC
-import quark as Q
+from su4ops.constants import NS, NC
+import su4ops.quark as Q
+import su4ops.elemental as E
 import numpy as np
 import sympy as sp
 # from https://www.bernardosulzbach.com/heaps-algorithm/
@@ -50,7 +51,7 @@ def su2_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0):
     s0 = i % NS
     tmp = i//NS
     s1 = tmp % NS
-    elemental = Q.Elemental(1, [quark(s0, f1), quark(s1, f2)])
+    elemental = E.Elemental(1, [quark(s0, f1), quark(s1, f2)])
     newIdx = 0
     sign = 1.
     if elemental in extraBasis:
@@ -72,7 +73,7 @@ def su3_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0, f3=0):
     tmp = tmp//NS
     s2 = tmp % NS
 
-    elemental = Q.Elemental(1, [quark(s0, f1), quark(s1, f2), quark(s2, f3)])
+    elemental = E.Elemental(1, [quark(s0, f1), quark(s1, f2), quark(s2, f3)])
     newIdx = 0
     sign = 1.
     if elemental in extraBasis:
@@ -96,7 +97,7 @@ def su4_fullVec_to_reduced(vec, basis, extraBasis):
     tmp = tmp//NS
     s3 = tmp % NS
 
-    elemental = Q.Elemental(1, [quark(s0), quark(s1), quark(s2), quark(s3)])
+    elemental = E.Elemental(1, [quark(s0), quark(s1), quark(s2), quark(s3)])
     newIdx = 0
     if elemental in extraBasis:
       newIdx = basis.index(extraBasis[elemental])

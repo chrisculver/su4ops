@@ -1,8 +1,9 @@
 import utils
-import quark as Q
+import su4ops.quark as Q
+import su4ops.elemental as E
 import numpy as np
 import FiniteVolumeGroups as fvg
-from constants import NS
+from su4ops.constants import NS
 
 oh = fvg.cubic.Oh()
 
@@ -11,7 +12,7 @@ fullbasis = []
 extraBasis = {}
 for s0 in range(0, NS):
   for s1 in range(0, NS):
-      newOp = Q.Elemental(1, [utils.quark(s0), utils.quark(s1)])
+      newOp = E.Elemental(1, [utils.quark(s0), utils.quark(s1)])
       fullbasis.append(newOp)
       foundRelated = False
       for b in basis:
@@ -21,7 +22,7 @@ for s0 in range(0, NS):
           if not utils.arePermsEqualParity(newOp.quarks, b.quarks):
             sign = -1
           extraBasis[newOp] = {
-            'elemental': Q.Elemental(1, b.quarks), 'sign': sign}
+            'elemental': E.Elemental(1, b.quarks), 'sign': sign}
       if not foundRelated:
         basis.append(newOp)
 
@@ -38,7 +39,7 @@ for e, val in extraBasis.items():
 
 
 print(basis[1])
-tst = Q.Elemental(1, [utils.quark(1), utils.quark(0)])
+tst = E.Elemental(1, [utils.quark(1), utils.quark(0)])
 
 
 rot01 = basis[1].spatial_rotate(oh.elements[1])
@@ -54,34 +55,8 @@ for g in oh.elements:
   rep.append(utils.makeRepMat(basis, extraBasis, g, oh.elements[0]))
 
 
-#check that the rep is closed
-for g1 in rep:
-    for g2 in rep:
-        prod = np.matmul(g1, g2)
-        if not any(np.allclose(prod, g) for g in rep):
-            print("not closed")
+fvg.representation_checks.is_valid_rep(rep)
 
-# check associativity
-for a in rep:
-    for b in rep:
-        for c in rep:
-            lhs = np.matmul(np.matmul(a, b), c)
-            rhs = np.matmul(a, np.matmul(b, c))
-            if not np.allclose(lhs, rhs):
-                print("associativity fails")
-
-# identity
-len(rep[0])
-np.allclose(rep[0], np.identity(len(rep[0])))
-
-# inverse
-for g1 in rep:
-    has_inverse = False
-    for g2 in rep:
-        if np.allclose(np.matmul(g1, g2), np.identity(len(rep[0]))):
-            has_inverse = True
-    if not has_inverse:
-        print("g1 doesn't have an inverse")
 
 tot = 0
 for irrep in oh.elements[0].irreps:

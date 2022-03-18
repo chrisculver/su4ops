@@ -1,6 +1,6 @@
 import su4ops.gammas as G
 
-NC = 3
+NC = 2
 NS = G.NS
 gamma_basis = 'degrand-rossi'  # 'dirac-pauli' #weyl-chiral #degrand-rossi
 
