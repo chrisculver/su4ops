@@ -1,9 +1,21 @@
+from su4ops.constants import gammas
 import utils
 import su4ops.quark as Q
 import su4ops.elemental as E
 import numpy as np
 import FiniteVolumeGroups as fvg
 from su4ops.constants import NS
+
+
+def matPrint(mat):
+  dim = mat.shape[0]
+  s = ""
+  for i in range(dim):
+    for j in range(dim):
+      s += "{}+{}i ".format(mat[i][j].real, mat[i][j].imag)
+    s += "\n"
+  print(s)
+
 
 oh = fvg.cubic.Oh()
 
@@ -41,13 +53,36 @@ for e, val in extraBasis.items():
 print(basis[1])
 tst = E.Elemental(1, [utils.quark(1), utils.quark(0)])
 
+print(fullbasis[0])
+print(fullbasis[1])
+print(fullbasis[4])
+print(fullbasis[5])
 
-rot01 = basis[1].spatial_rotate(oh.elements[1])
-rot10 = tst.spatial_rotate(oh.elements[1])
+rot00 = fullbasis[0].spatial_rotate(oh.elements[1])
+rot01 = fullbasis[1].spatial_rotate(oh.elements[1])
+rot10 = fullbasis[4].spatial_rotate(oh.elements[1])
+rot11 = fullbasis[5].spatial_rotate(oh.elements[1])
 
 
+print(rot00.round(4))
+print(utils.su2_fullVec_to_reduced(rot00, basis, extraBasis))
+
+
+oh.elements[1].identifier['name']
+id = np.identity(4)
+g2g3 = np.matmul(gammas[2], gammas[3])
+g3g1 = np.matmul(gammas[3], gammas[1])
+g1g2 = np.matmul(gammas[1], gammas[2])
+
+
+utils.print_vec(rot00.round(4), fullbasis)
 utils.print_vec(rot01.round(4), fullbasis)
 utils.print_vec(rot10.round(4), fullbasis)
+utils.print_vec(rot11.round(4), fullbasis)
+
+(id+g2g3+g3g1+g1g2)/2.
+utils.quark(0).spatial_rotate(oh.elements[1])
+utils.quark(1).spatial_rotate(oh.elements[1])
 
 
 rep = []
@@ -56,6 +91,16 @@ for g in oh.elements:
 
 
 fvg.representation_checks.is_valid_rep(rep)
+
+
+matPrint(rep[1])
+
+matPrint(np.matmul(rep[1], rep[1]))
+
+matPrint(np.matmul(rep[1], rep[1]))
+
+matPrint(rep[24])
+matPrint(rep[34])
 
 
 tot = 0
@@ -78,4 +123,5 @@ print("{}-{}".format(basis[3], basis[5]))
 #[[0,0,0,1],
 #[0,0,-1,0],
 #[0,1,0,0],
+#[-1,0,0,0]]
 #[-1,0,0,0]]

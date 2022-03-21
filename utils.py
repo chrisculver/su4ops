@@ -56,7 +56,7 @@ def su2_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0):
     sign = 1.
     if elemental in extraBasis:
       newIdx = basis.index(extraBasis[elemental]['elemental'])
-      #sign = extraBasis[elemental]['sign']
+      sign = extraBasis[elemental]['sign']
     else:
       newIdx = basis.index(elemental)
 
@@ -78,7 +78,7 @@ def su3_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0, f3=0):
     sign = 1.
     if elemental in extraBasis:
       newIdx = basis.index(extraBasis[elemental]['elemental'])
-      #sign = extraBasis[elemental]['sign']
+      sign = extraBasis[elemental]['sign']
     else:
       newIdx = basis.index(elemental)
 
@@ -99,8 +99,10 @@ def su4_fullVec_to_reduced(vec, basis, extraBasis):
 
     elemental = E.Elemental(1, [quark(s0), quark(s1), quark(s2), quark(s3)])
     newIdx = 0
+    sign = 1.
     if elemental in extraBasis:
-      newIdx = basis.index(extraBasis[elemental])
+      newIdx = basis.index(extraBasis[elemental]['elemental'])
+      sign = extraBasis[elemental]['sign']
     else:
       newIdx = basis.index(elemental)
 
@@ -132,13 +134,13 @@ def makeRepMat(basis, extraBasis, gElem, id, f1=0, f2=0):
       b.spatial_rotate(gElem), basis, extraBasis, f1, f2))
     refMat.append(fullVec_to_reduced(
         b.spatial_rotate(id), basis, extraBasis, f1, f2))
-
   res = np.zeros((len(basis), len(basis)), dtype=complex)
   for r in range(len(basis)):
     for c in range(len(basis)):
       res[r, c] = np.dot(rotMat[r], refMat[c])
 
   return np.transpose(res)
+  #return np.array(rotMat)
 
 
 def projectorMat(irrep, rep, group, row=0):
