@@ -1,8 +1,8 @@
 import su4ops.gammas as G
 
-NC = 2
+NC = 3
 NS = G.NS
-gamma_basis = 'degrand-rossi'  # 'dirac-pauli' #weyl-chiral #degrand-rossi
+gamma_basis = 'dirac-pauli'  # 'dirac-pauli' #weyl-chiral #degrand-rossi
 
 gammas = G.get_basis(gamma_basis)
 

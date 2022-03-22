@@ -80,7 +80,15 @@ utils.print_vec(rot01.round(4), fullbasis)
 utils.print_vec(rot10.round(4), fullbasis)
 utils.print_vec(rot11.round(4), fullbasis)
 
+utils.su2_fullVec_to_reduced(rot00,basis,extraBasis)
+utils.su2_fullVec_to_reduced(rot01,basis,extraBasis)
+utils.su2_fullVec_to_reduced(rot10,basis,extraBasis)
+utils.su2_fullVec_to_reduced(rot11,basis,extraBasis)
+
+
 (id+g2g3+g3g1+g1g2)/2.
+
+
 utils.quark(0).spatial_rotate(oh.elements[1])
 utils.quark(1).spatial_rotate(oh.elements[1])
 
@@ -93,9 +101,11 @@ for g in oh.elements:
 fvg.representation_checks.is_valid_rep(rep)
 
 
-matPrint(rep[1])
+r1=rep[1]
+r1adj=np.array(np.matrix(rep[1]).getH())
 
-matPrint(np.matmul(rep[1], rep[1]))
+
+matPrint(np.matmul(r1,r1adj))
 
 matPrint(np.matmul(rep[1], rep[1]))
 
