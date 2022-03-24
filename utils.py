@@ -204,9 +204,13 @@ def arePermsEqualParity(perm0, perm1):
 
 
 def print_vec(vec, basis):
+  v = copy.deepcopy(basis)
+  for i in range(len(vec)):
+    v[i].coef *= vec[i]
   s = ""
-  for i in range(len(vec)-1):
-    if not np.isclose(vec[i], 0):
-      s += "{}*{}".format(vec[i], basis[i])+"+"
-  s += "{}*{}".format(vec[i], basis[i])
+  for i in range(len(v)-1):
+    if not np.isclose(v[i].coef, 0):
+      s += "{}".format(v[i])+"+"
+  if not np.isclose(v[len(v)-1].coef, 0):
+    s += "{}".format(v[len(v)-1])
   print(s)

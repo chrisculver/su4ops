@@ -1,9 +1,11 @@
+import math
 import utils
 import su4ops.quark as Q
 import su4ops.elemental as E
 import numpy as np
 import FiniteVolumeGroups as fvg
-from su4ops.constants import NS,gammas
+from su4ops.constants import NS, gammas
+
 
 def matPrint(mat):
   dim = mat.shape[0]
@@ -54,63 +56,63 @@ for g in o2h.elements:
   rep.append(utils.makeRepMat(basis, extraBasis, g, o2h.elements[0]))
 
 
-metric = np.matrix([[0. for j in range(len(rep[0]))] for i in range(len(rep[0]))], dtype='complex')
+metric = np.matrix([[0. for j in range(len(rep[0]))]
+                   for i in range(len(rep[0]))], dtype='complex')
 for g in rep:
   metric += np.matmul(np.matrix(g).getH(), np.matrix(g))
-print(3.0*np.diag(metric)/len(rep))
 
+for i in range(len(rep[0])):
+  for j in range(len(rep[0])):
+    if i != j and not np.isclose(metric[i, j], 0):
+      print("Off diagonal element is non-zero")
+      break
+
+print(3.0*np.diag(metric)/len(rep))
 
 
 fvg.representation_checks.is_valid_rep(rep)
 
 
-import math
 matPrint((rep[20]*2*math.sqrt(2)).round(4))
 
 utils.quark(0).spatial_rotate(o2h.elements[20])
 utils.quark(1).spatial_rotate(o2h.elements[20])
-np.matmul((np.identity(4)+np.matmul(gammas[3],gammas[1])),np.array([1,0,0,0]))
+np.matmul(
+  (np.identity(4)+np.matmul(gammas[3], gammas[1])), np.array([1, 0, 0, 0]))
 
 
-
-
-
-
-
-for bi,b in enumerate(basis):
-  for gi,elem in enumerate(o2h.elements):
-    dim=len(basis)
-    lhs=utils.su3_fullVec_to_reduced(b.spatial_rotate(elem),basis,extraBasis)
-    rhs=np.zeros(dim,dtype=complex)
-    bVec=np.ones(dim)
+for bi, b in enumerate(basis):
+  for gi, elem in enumerate(o2h.elements):
+    dim = len(basis)
+    lhs = utils.su3_fullVec_to_reduced(
+      b.spatial_rotate(elem), basis, extraBasis)
+    rhs = np.zeros(dim, dtype=complex)
+    bVec = np.ones(dim)
     for j in range(dim):
-      rhs[j]+=bVec[j]*rep[gi][j,bi]
-    if not np.allclose(lhs,rhs):
+      rhs[j] += bVec[j]*rep[gi][j, bi]
+    if not np.allclose(lhs, rhs):
       print(lhs)
       print(rhs)
-      raise AssertionError("not a valid rep matrix for basis element {} and group element {}".format(bi,gi))
+      raise AssertionError(
+        "not a valid rep matrix for basis element {} and group element {}".format(bi, gi))
 matPrint(rep[1])
-
-
-
 
 
 o2h.elements.index(o2h.get_element('C4y'))
 o2h.elements.index(o2h.get_element('C4z'))
-o2h.elements.index(o2h.get_element('E',parity=-1))
+o2h.elements.index(o2h.get_element('E', parity=-1))
 
-import math
-Wc4z=np.diag(np.matrix((rep[22]*math.sqrt(2)).round(4)))
+Wc4z = np.diag(np.matrix((rep[22]*math.sqrt(2)).round(4)))
 
-expC4z = np.array([-1+1j,1+1j,-1+1j,1+1j,1-1j,1+1j,1-1j,-1+1j,1+1j,1-1j,-1-1j,1-1j,-1-1j,1+1j,1-1j,-1-1j,-1+1j,1+1j,1-1j,-1-1j])
-np.allclose(Wc4z,expC4z)
+expC4z = np.array([-1+1j, 1+1j, -1+1j, 1+1j, 1-1j, 1+1j, 1-1j, -1+1j, 1+1j,
+                  1-1j, -1-1j, 1-1j, -1-1j, 1+1j, 1-1j, -1-1j, -1+1j, 1+1j, 1-1j, -1-1j])
+np.allclose(Wc4z, expC4z)
 
-np.allclose(np.diag(np.matrix(rep[48])),np.array([1,1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,1,1,1,-1,-1,-1,-1]))
+np.allclose(np.diag(np.matrix(rep[48])), np.array(
+  [1, 1, -1, -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, 1, 1, -1, -1, -1, -1]))
 
 
 matPrint((rep[20]*2*math.sqrt(2)).round(4))
-
-
 
 
 tot = 0
@@ -124,7 +126,11 @@ print("{} operators across all irreps".format(tot))
 for op in utils.operators('G1g', rep, o2h):
   utils.print_vec(op, basis)
 
+for op in utils.operators('G1u', rep, o2h):
+  utils.print_vec(op, basis)
 
-utils.operators('Hg', rep, o2h)
+for op in utils.operators('Hg', rep, o2h):
+  utils.print_vec(op, basis)
 
-utils.operators('Hu', rep, o2h)
+for op in utils.operators('Hu', rep, o2h):
+  utils.print_vec(op, basis)
