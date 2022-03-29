@@ -86,7 +86,7 @@ def su3_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0, f3=0):
   return np.array(newVec).round(8)
 
 
-def su4_fullVec_to_reduced(vec, basis, extraBasis):
+def su4_fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0, f3=0, f4=0):
   newVec = [0 for b in basis]
   for i, val in enumerate(vec):
     s0 = i % NS
@@ -97,7 +97,8 @@ def su4_fullVec_to_reduced(vec, basis, extraBasis):
     tmp = tmp//NS
     s3 = tmp % NS
 
-    elemental = E.Elemental(1, [quark(s0), quark(s1), quark(s2), quark(s3)])
+    elemental = E.Elemental(
+        1, [quark(s0, f1), quark(s1, f2), quark(s2, f3), quark(s3, f4)])
     newIdx = 0
     sign = 1.
     if elemental in extraBasis:
@@ -107,17 +108,17 @@ def su4_fullVec_to_reduced(vec, basis, extraBasis):
       newIdx = basis.index(elemental)
 
     #TODO: I think this needs to be multiplied by +/- 1 depending on Grassman?
-    newVec[newIdx] += val
+    newVec[newIdx] += sign*val
   return np.array(newVec).round(8)
 
 
-def fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0, f3=0):
+def fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0, f3=0, f4=0):
   if NC == 2:
     return su2_fullVec_to_reduced(vec, basis, extraBasis, f1, f2)
   elif NC == 3:
     return su3_fullVec_to_reduced(vec, basis, extraBasis, f1, f2, f3)
   elif NC == 4:
-    return su4_fullVec_to_reduced(vec, basis, extraBasis)
+    return su4_fullVec_to_reduced(vec, basis, extraBasis, f1, f2, f3, f4)
   else:
     raise ValueError("Reducing NC={} vector not implemented".format(NC))
 # [A,B],
@@ -126,21 +127,13 @@ def fullVec_to_reduced(vec, basis, extraBasis, f1=0, f2=0, f3=0):
 # [1,0]
 
 
-def makeRepMat(basis, extraBasis, gElem, id, f1=0, f2=0):
+def makeRepMat(basis, extraBasis, gElem, id, f1=0, f2=0, f3=0, f4=0):
   rotMat = []
-  refMat = []
+
   for b in basis:
     rotMat.append(fullVec_to_reduced(
-      b.spatial_rotate(gElem), basis, extraBasis, f1, f2))
-    refMat.append(fullVec_to_reduced(
-        b.spatial_rotate(id), basis, extraBasis, f1, f2))
-  #res = np.zeros((len(basis), len(basis)), dtype=complex)
+      b.spatial_rotate(gElem), basis, extraBasis, f1, f2, f3, f4))
 
-  #for r in range(len(basis)):
-  #  for c in range(len(basis)):
-  #    res[r, c] = np.dot(rotMat[r], refMat[c])
-
-  #return np.transpose(res)
   return np.transpose(np.array(rotMat))
 
 
