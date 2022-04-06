@@ -100,4 +100,18 @@ print("{} operators across all irreps".format(tot))
 
 for op in utils.operators('A1g', rep, oh):
   utils.print_vec(op, basis)
+<<<<<<< Updated upstream
 # +1*uuuu(0,0,3,3) -2*uuuu(0,1,2,3) + 1*uuuu(1,1,2,2)
+=======
+#O_1(t)= + 1*uuuu(0,0,3,3) -2*uuuu(0,1,2,3) + 1*uuuu(1,1,2,2)
+#
+#O_2(t)=O_1(t) + 1*uuuu(0303) + uuuu(3300) + ... uuuu(2211) + ....
+
+for op in utils.operators('Eg', rep, oh):
+  utils.print_vec(op, basis)
+  print()
+
+for op in utils.operators('Eu', rep, oh):
+  utils.print_vec(op, basis)
+  print()
+>>>>>>> Stashed changes
