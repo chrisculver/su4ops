@@ -57,8 +57,7 @@ for g in oh.elements:
   rep.append(utils.makeRepMat(basis, extraBasis, g, oh.elements[0]))
 
 
-metric = np.matrix([[0. for j in range(len(rep[0]))]
-                   for i in range(len(rep[0]))], dtype='complex')
+metric = np.matrix([[0. for j in range(len(rep[0]))] for i in range(len(rep[0]))], dtype='complex')
 for g in rep:
   metric += np.matmul(np.matrix(g).getH(), np.matrix(g))
 
@@ -100,9 +99,11 @@ print("{} operators across all irreps".format(tot))
 
 for op in utils.operators('A1g', rep, oh):
   utils.print_vec(op, basis)
-<<<<<<< Updated upstream
+  print()
+
+# same for ubar operator
 # +1*uuuu(0,0,3,3) -2*uuuu(0,1,2,3) + 1*uuuu(1,1,2,2)
-=======
+
 #O_1(t)= + 1*uuuu(0,0,3,3) -2*uuuu(0,1,2,3) + 1*uuuu(1,1,2,2)
 #
 #O_2(t)=O_1(t) + 1*uuuu(0303) + uuuu(3300) + ... uuuu(2211) + ....
@@ -114,4 +115,3 @@ for op in utils.operators('Eg', rep, oh):
 for op in utils.operators('Eu', rep, oh):
   utils.print_vec(op, basis)
   print()
->>>>>>> Stashed changes

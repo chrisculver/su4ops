@@ -38,7 +38,7 @@ def permutations(elems):
 
 
 def quark(spin, flavor=0): return Q.Quark({
-    'bar': False,
+    'bar': True,
     'flavor': flavor,
     'color': 0,
     'spin': spin,
