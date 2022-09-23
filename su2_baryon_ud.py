@@ -1,8 +1,8 @@
 import utils
-import quark as Q
+import su4ops.quark as Q
 import numpy as np
 import FiniteVolumeGroups as fvg
-from constants import NS, gammas
+from su4ops.constants import NS, gammas
 
 oh = fvg.cubic.Oh()
 
