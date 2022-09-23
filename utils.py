@@ -97,7 +97,7 @@ def su4_fullVec_to_reduced(vec, basis, extraBasis):
     tmp = tmp//NS
     s3 = tmp % NS
 
-    elemental = E.Elemental(1, [quark(s0), quark(s1), quark(s2), quark(s3)])
+    elemental = E.Elemental(1, [quark(s0,0), quark(s1,1), quark(s2,0), quark(s3,1)])
     newIdx = 0
     sign = 1.
     if elemental in extraBasis:
@@ -106,8 +106,7 @@ def su4_fullVec_to_reduced(vec, basis, extraBasis):
     else:
       newIdx = basis.index(elemental)
 
-    #TODO: I think this needs to be multiplied by +/- 1 depending on Grassman?
-    newVec[newIdx] += val
+    newVec[newIdx] += sign*val
   return np.array(newVec).round(8)
 
 
