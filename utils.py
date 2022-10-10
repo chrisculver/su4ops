@@ -213,3 +213,4 @@ def print_vec(vec, basis):
   if not np.isclose(v[len(v)-1].coef, 0):
     s += "{}".format(v[len(v)-1])
   print(s)
+
