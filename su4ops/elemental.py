@@ -15,8 +15,8 @@ class Elemental():
         res = rotationVecs[0]
         for i in range(1, len(rotationVecs)):
             #this choice of ordering for the kronecker products means, for mesons
-            # the basis elements are phi_00, phi_10, phi_20 ..., aka row-col ordering
-            res = np.kron(rotationVecs[i], res)
+            # the basis elements are phi_00, phi_01, phi_02 ...
+            res = np.kron(res, rotationVecs[i])
 
         return res
 
@@ -28,8 +28,8 @@ class Elemental():
       res = rotationVecs[0]
       for i in range(1, len(rotationVecs)):
           #this choice of ordering for the kronecker products means, for mesons
-          # the basis elements are phi_00, phi_10, phi_20 ..., aka row-col ordering
-          res = np.kron(rotationVecs[i], res)
+          # the basis elements are phi_00, phi_01, phi_02 ...
+          res = np.kron(res, rotationVecs[i])
 
       return res
 
@@ -56,3 +56,6 @@ class Elemental():
             s += '{}*'.format(q)
         s += '{}'.format(self.quarks[-1])
         return s
+
+    def same_quarks(self, other):
+      return self.quarks==other.quarks

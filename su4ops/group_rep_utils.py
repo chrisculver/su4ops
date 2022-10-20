@@ -1,24 +1,14 @@
-from utils import fullVec_to_reduced
+from su4ops.utils import fullVec_to_reduced
 import numpy as np
 import sympy as sp
 
-def makeRepMat(basis, extraBasis, gElem, id, f1=0, f2=0):
+def makeRepMat(gElem, basis, mapping):
     rotMat = []
-    refMat = []
     for b in basis:
         rotMat.append(fullVec_to_reduced(
-        b.spatial_rotate(gElem), basis, extraBasis, f1, f2))
-        refMat.append(fullVec_to_reduced(
-            b.spatial_rotate(id), basis, extraBasis, f1, f2))
-    #res = np.zeros((len(basis), len(basis)), dtype=complex)
+            b.spatial_rotate(gElem), mapping, len(basis)))
 
-    #for r in range(len(basis)):
-    #  for c in range(len(basis)):
-    #    res[r, c] = np.dot(rotMat[r], refMat[c])
-
-    #return np.transpose(res)
     return np.transpose(np.array(rotMat))
-
 
 def projectorMat(irrep, rep, group, row=0):
     dim = len(rep[0])

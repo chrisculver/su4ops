@@ -1,5 +1,5 @@
 import math
-import utils
+import su4ops.utils as utils
 import su4ops.quark as Q
 import su4ops.elemental as E
 import numpy as np
