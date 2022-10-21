@@ -1,4 +1,4 @@
-import utils
+import su4ops.utils as utils
 import su4ops.quark as Q
 import numpy as np
 import FiniteVolumeGroups as fvg
