@@ -52,6 +52,8 @@ def fullVec_to_reduced(vec, mapping, NB):
   return res
 
 
+
+
 def op_basis_map(op):
   basis_map = {}
   for i, val in enumerate(op):

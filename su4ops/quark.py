@@ -15,10 +15,16 @@ class Quark():
 
     def spatial_rotate(self, gElem):
         vec = [1 if i == self.spin else 0 for i in range(NS)]
+        g = Gamma(gElem, self.barred)
+        rotVec = [0 for s in range(NS)]
         if self.barred:
-            rotVec = np.matmul(np.transpose(vec), Gamma(gElem, self.barred))
+            for i in range(NS):
+                for j in range(NS):
+                    rotVec[i]+=vec[j]*g[j,i]
         else:
-            rotVec = np.matmul(Gamma(gElem, self.barred), vec)
+            for i in range(NS):
+                for j in range(NS):
+                    rotVec[i]+=g[i,j]*vec[j]
 
         return rotVec
 
