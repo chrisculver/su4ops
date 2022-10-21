@@ -57,14 +57,14 @@ class Quark():
 
         return s
 
-
+# returns Gamma or \bar{Gamma} for quarks and anit-quarks for proper and improper rotations
 def Gamma(gElem, barred=False):
     if gElem.identifier['parity'] in [1, None]:
         return GammaProper(gElem, barred)
     else:
         return np.matmul(gammas[4], GammaProper(gElem, barred))
 
-
+# Proper meaning a proper rotation not a parity rotation
 def GammaProper(gElem, barred=False):
     id = np.identity(NS)
     t0 = id*math.cos(gElem.identifier['angle']/2.)

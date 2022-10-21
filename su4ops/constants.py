@@ -2,9 +2,8 @@ import su4ops.gammas as G
 
 NC = 0
 NS = G.NS
-gamma_basis = 'dirac-pauli'  # 'dirac-pauli' #weyl-chiral #degrand-rossi
 
-gammas = G.get_basis(gamma_basis)
+gammas=G.get_basis('dirac-pauli')
 
 flavorLabels = {0: 'u', 1: 'd'}
 NF = len(flavorLabels)

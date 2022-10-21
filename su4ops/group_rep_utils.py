@@ -20,7 +20,7 @@ def projectorMat(irrep, rep, group, row=0):
 
 
 def operators(irrep, rep, group, row=0):
-    proj = projectorMat(irrep, rep, group, row)
+    proj = projectorMat(irrep, rep, group, row).round(4)
     rrefMat = sp.Matrix(proj).rref()[0].tolist()
     for row in rrefMat[:]:
         if (row == [0 for i in range(len(row))]):
